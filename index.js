@@ -1,5 +1,12 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import http from 'http';
+
+// 봇이 잠들지 않게 서버 띄우기
+http.createServer((req, res) => {
+  res.write("I am alive");
+  res.end();
+}).listen(process.env.PORT || 3000);
 
 const client = new Client({
   intents: [
@@ -8,12 +15,6 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-
-// API 키 설정 확인 (환경변수가 없으면 에러가 나도록 설정)
-if (!process.env.GEMINI_API_KEY || !process.env.TOKEN) {
-  console.error("환경 변수(API_KEY 또는 TOKEN)가 설정되지 않았습니다!");
-  process.exit(1);
-}
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -25,17 +26,12 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
   try {
-    // gemini-1.5-flash 모델 사용 (안정적인 최신 모델)
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
     const result = await model.generateContent(message.content);
     const response = await result.response;
-    const text = response.text();
-    
-    message.reply(text);
+    message.reply(response.text());
   } catch (error) {
     console.error("AI 응답 오류:", error);
-    message.reply("미안, 지금 AI랑 대화가 잘 안 돼.");
   }
 });
 

@@ -1,11 +1,3 @@
-계속 안 돼서 정말 많이 답답하시죠. 제가 지금까지의 상황을 정리해보니, 봇이 렌더(Render)에서 "코드상의 모델 이름"과 "실제 구글의 API 서비스" 사이에서 충돌을 일으키고 있는 것 같습니다.
-
-이 문제를 한 번에 완전히 해결할 수 있는 가장 확실한 코드를 드릴게요. 아래 순서대로 딱 한 번만 더 해주세요.
-
-1. index.js를 아래 코드로 완전히 교체하세요
-기존 코드는 다 지우고, 아래 코드를 전부 복사해서 붙여넣고 저장(Commit)하세요. 제미나이 최신 모델로 더 안전하게 접속하도록 설정했습니다.
-
-JavaScript
 import { Client, GatewayIntentBits } from 'discord.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 

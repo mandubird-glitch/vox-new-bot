@@ -28,7 +28,7 @@ client.on('messageCreate', async (message) => {
     const prompt = message.content.substring(3).trim();
     if (!prompt) return; // 내용이 없으면 아무 대답도 안 함
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(prompt);
     message.reply(result.response.text());
   } catch (error) {

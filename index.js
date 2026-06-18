@@ -17,26 +17,23 @@ const client = new Client({
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-client.once('ready', () => {
-  console.log('🖤 복스가 깨어났어...');
-});
-
 client.on('messageCreate', async (message) => {
+  // 봇 자신의 메시지면 즉시 종료
   if (message.author.bot) return;
+  
+  // '!복스'로 시작하지 않으면 즉시 종료 (명령어 필수)
   if (!message.content.startsWith('!복스')) return;
 
   try {
-    const prompt = message.content.slice(3).trim();
-    if (!prompt) return message.reply("응? 뭐라고 말할까?");
+    const prompt = message.content.substring(3).trim();
+    if (!prompt) return; // 내용이 없으면 아무 대답도 안 함
 
-    // 가장 안전한 gemini-pro 모델 사용
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const result = await model.generateContent(prompt);
-    const response = await result.response;
-    message.reply(response.text());
+    message.reply(result.response.text());
   } catch (error) {
-    console.error("AI 응답 오류:", error);
-    message.reply("미안, 지금 AI 연결에 문제가 있어.");
+    console.error("오류 발생:", error);
+    // 오류가 나도 명령어 없이 대답하는 것을 방지
   }
 });
 
